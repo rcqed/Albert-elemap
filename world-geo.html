@@ -10,16 +10,14 @@
             overflow: hidden;
         }
     </style>
-  <script src="../docsify/baidu-tongji/_js/baidu-tongji.js"></script>
-  <script src="../docsify/baidu-tongji/_js/baidu-ziyuan.js"></script>
 </head>
 <body>
     <div id="chart-container" style="width: 100vw; height: 100vh;"></div>
 
-    <script type="text/javascript" src="./_js/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
     <script type="module">
         // load word geo json zh data
-        import worldGeoJsonZh  from './_js/world-geo-json-zh.js'
+        import worldGeoJsonZh  from 'https://cdn.jsdelivr.net/npm/@surbowl/world-geo-json-zh/+esm'
 
         var chartDom = document.getElementById("chart-container")
 
