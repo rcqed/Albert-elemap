@@ -16,6 +16,8 @@ B站UP小王Albert的看世界的在线地图展示
 
 地图使用：[world-geo-json-zh](https://github.com/Surbowl/world-geo-json-zh)
 
+[Echarts](https://github.com/apache/echarts)
+
 感谢B站各位对项目地图问题的指正，感谢各位支持！
 
 感谢[victcity](https://space.bilibili.com/3496785)
