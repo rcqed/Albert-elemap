@@ -1,68 +1,62 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<html>
 <head>
     <meta charset="utf-8">
-  <title>电子地图册</title>
+    <title>电子地图册</title>
     <style>
         /* 隐藏页面滚动条 */
         body {
             overflow: hidden;
         }
     </style>
+    <script src="../docsify/baidu-tongji/_js/baidu-tongji.js"></script>
+    <script src="../docsify/baidu-tongji/_js/baidu-ziyuan.js"></script>
 </head>
 <body>
-    <div id="chart-container" style="width: 100vw; height: 100vh;"></div>
+<div id="chart-container" style="width: 100vw; height: 100vh;"></div>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
-    <script type="module">
-        // load word geo json zh data
-        import worldGeoJsonZh  from 'https://cdn.jsdelivr.net/npm/@surbowl/world-geo-json-zh/+esm'
+<script type="text/javascript" src="./_js/echarts.min.js"></script>
+<script type="module">
+    // load word geo json zh data
+    import worldGeoJsonZh from './_js/world-geo-json-zh.js'
 
-        var chartDom = document.getElementById("chart-container")
+    var chartDom = document.getElementById("chart-container");
 
-        // init chart
+    // 使用Fetch API获取文件内容
+    fetch('./videolink.md')
+        .then(response => response.text())
+        .then(text => {
+            // 在这里处理从文件中获取的文本数据
+            // 可以根据文件内容的格式进行解析
+            // 假设文件内容是逗号分隔的国家名称和链接
+            // 例如：国家1,链接1\n国家2,链接2\n...
+            var lines = text.split('\n');
+            var data = lines.map(line => {
+                var parts = line.split(',');
+                return { name: parts[0], link: parts[1] };
+            });
+
+            // 调用创建地图的函数，确保数据已准备好
+            createMap(data);
+        })
+        .catch(error => {
+            console.error('无法获取文件内容:', error);
+        });
+
+    function createMap(data) {
+        // 在这里创建地图，并将data分配给地图数据
         var myChart = echarts.init(chartDom);
         echarts.registerMap('WorldZh', worldGeoJsonZh);
-        
-        // 数据示例
-        var data = [
-            {name: "卡塔尔", link: "https://player.bilibili.com/player.html?bvid=BV1eG411M78V"},
-            {name: "沙特阿拉伯", link: "https://player.bilibili.com/player.html?bvid=BV1Po4y1N774"},
-            {name: "阿联酋", link: "https://player.bilibili.com/player.html?bvid=BV1sg4y1w76G"},
-            {name: "科威特", link: "https://player.bilibili.com/player.html?bvid=BV19P41167bm"},
-            {name: "阿曼", link: "https://player.bilibili.com/player.html?bvid=BV1w44y1A7xC"},
-            {name: "巴林", link: "https://player.bilibili.com/player.html?bvid=BV1hu4y1q7XU"},
-            {name: "吉尔吉斯斯坦", link: "https://player.bilibili.com/player.html?bvid=BV1Ro4y1A7DJ"},
-            {name: "乌兹别克斯坦", link: "https://player.bilibili.com/player.html?bvid=BV1pz4y1v7qY"},
-            {name: "塔吉克斯坦", link: "https://player.bilibili.com/player.html?bvid=BV1fu4y1U7oG"},
-            {name: "土库曼斯坦", link: "https://player.bilibili.com/player.html?bvid=BV1hj41197wT"},
-            {name: "哈萨克斯坦", link: "https://player.bilibili.com/player.html?bvid=BV1Vh4y1U78f"},
-            {name: "菲律宾", link: "https://player.bilibili.com/player.html?bvid=BV1og411d7rg"},
-            {name: "印度尼西亚", link: "https://player.bilibili.com/player.html?bvid=BV1QF411K7Lt"},
-            {name: "泰国", link: "https://player.bilibili.com/player.html?bvid=BV12g41167Gi"},
-            {name: "马来西亚", link: "https://player.bilibili.com/player.html?bvid=BV1xt4y1E7VC"},
-            {name: "文莱", link: "https://player.bilibili.com/player.html?bvid=BV1de4y1q799"},
-            {name: "东帝汶", link: "https://player.bilibili.com/player.html?bvid=BV1VG4y1Z7MW"},
-            {name: "老挝", link: "https://player.bilibili.com/player.html?bvid=BV1a3411o7vU"},
-            {name: "柬埔寨", link: "https://player.bilibili.com/player.html?bvid=BV1rs4y1Z7XH"},
-            {name: "缅甸", link: "https://player.bilibili.com/player.html?bvid=BV1Wb411f7fV"},
-            {name: "越南", link: "https://player.bilibili.com/player.html?bvid=BV12h411g7q9"},
-            {name: "新加坡", link: "https://player.bilibili.com/player.html?bvid=BV1bP41127FG"},
-            // 添加更多国家数据...
-        ];
 
-        // 定义淡蓝色样式
         var lightBlueItemStyle = {
             normal: {
-                areaColor: 'lightblue', // 设置地图区域的颜色
+                areaColor: 'lightblue',
             },
             emphasis: {
-                areaColor: '#f79e78' // 设置地图区域的高亮颜色为黄色
+                areaColor: '#f79e78'
             }
         };
 
-        // echarts map options
         var option = {
             series: [
                 {
@@ -70,16 +64,16 @@
                     type: 'map',
                     roam: true,
                     map: 'WorldZh',
-                    data: data.map(function(item) {
+                    data: data.map(function (item) {
                         return {
                             name: item.name,
-                            value: 1, // 为了显示国家区域，设置一个固定的值
+                            value: 1,
                             link: item.link,
-                            itemStyle: lightBlueItemStyle // 将淡蓝色样式应用到特定国家
+                            itemStyle: lightBlueItemStyle
                         };
                     }),
                     itemStyle: {
-                        borderColor: 'white' // 设置地图区域的边框颜色
+                        borderColor: 'white'
                     },
                     emphasis: {
                         // 可以设置地图区域的高亮样式
@@ -88,15 +82,14 @@
             ]
         };
 
-        // 添加点击事件监听器
-        myChart.on('click', function(params) {
+        myChart.setOption(option);
+
+        myChart.on('click', function (params) {
             if (params.data && params.data.link) {
-                // 打开链接
                 window.open(params.data.link, '_blank');
             }
         });
-
-        myChart.setOption(option);
-    </script>
+    }
+</script>
 </body>
 </html>

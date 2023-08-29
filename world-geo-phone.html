@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>电子地图册</title>
+    <style>
+        /* 隐藏页面滚动条 */
+        body {
+            overflow: hidden;
+        }
+    </style>
+    <script src="../docsify/baidu-tongji/_js/baidu-tongji.js"></script>
+    <script src="../docsify/baidu-tongji/_js/baidu-ziyuan.js"></script>
+</head>
+<body>
+    <div id="chart-container" style="width: 100vw; height: 100vh;"></div>
+
+    <script type="text/javascript" src="./_js/echarts.min.js"></script>
+    <script type="module">
+        // load word geo json zh data
+        import worldGeoJsonZh  from './_js/world-geo-json-zh.js'
+
+        var chartDom = document.getElementById("chart-container")
+
+        // init chart
+        var myChart = echarts.init(chartDom);
+        echarts.registerMap('WorldZh', worldGeoJsonZh);
+
+        // 使用Fetch API获取文件内容
+        fetch('./videolink.md')
+            .then(response => response.text())
+            .then(text => {
+                // 解析文件内容，假设每行包含国家名称和链接，以逗号分隔
+                var lines = text.split('\n');
+                var data = lines.map(line => {
+                    var parts = line.split(',');
+                    return { name: parts[0], link: parts[1] };
+                });
+
+                // 更新地图数据
+                updateMapData(data);
+            })
+            .catch(error => {
+                console.error('无法获取文件内容:', error);
+            });
+
+        // 更新地图数据的函数
+        function updateMapData(newData) {
+            // 定义淡蓝色样式
+            var lightBlueItemStyle = {
+                normal: {
+                    areaColor: 'lightblue', // 设置地图区域的颜色
+                },
+                emphasis: {
+                    areaColor: '#f79e78' // 设置地图区域的高亮颜色为黄色
+                }
+            };
+
+            // echarts map options
+            var option = {
+                series: [
+                    {
+                        name: 'Demo',
+                        type: 'map',
+                        roam: true,
+                        map: 'WorldZh',
+                        data: newData.map(function(item) {
+                            return {
+                                name: item.name,
+                                value: 1, // 为了显示国家区域，设置一个固定的值
+                                link: item.link,
+                                itemStyle: lightBlueItemStyle, // 将淡蓝色样式应用到特定国家
+                                label: {
+                                    show: true, // 让标签一直可见
+                                    position: 'inside', // 标签位置可以根据需要调整
+                                    textStyle: {
+                                        color: 'black' // 标签文字颜色
+                                    }
+                                }
+                            };
+                        }),
+                        itemStyle: {
+                            borderColor: 'white' // 设置地图区域的边框颜色
+                        },
+                        emphasis: {
+                            // 可以设置地图区域的高亮样式
+                        }
+                    }
+                ]
+            };
+
+            // 添加点击事件监听器
+            myChart.on('click', function(params) {
+                if (params.data && params.data.link) {
+                    // 打开链接
+                    window.open(params.data.link, '_blank');
+                }
+            });
+
+            myChart.setOption(option);
+        }
+    </script>
+</body>
+</html>

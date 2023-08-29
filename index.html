@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>电子地图册跳转</title>
+</head>
+<body>
+
+<script>
+    // 检测用户设备类型
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    // 设置跳转URL
+    var redirectURL = isMobile ? './world-geo-phone.html' : './world-geo.html';
+
+    // 执行跳转
+    window.location.href = redirectURL;
+</script>
+
+</body>
+</html>
