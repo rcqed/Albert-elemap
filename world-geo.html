@@ -9,87 +9,86 @@
             overflow: hidden;
         }
     </style>
-    <script src="./_js/baidu-tongji.js"></script>
-    <script src="./_js/baidu-ziyuan.js"></script>
+
 </head>
 <body>
-<div id="chart-container" style="width: 100vw; height: 100vh;"></div>
+	<div id="chart-container" style="width: 100vw; height: 100vh;"></div>
 
-<script type="text/javascript" src="./_js/echarts.min.js"></script>
-<script type="module">
-    // load word geo json zh data
-    import worldGeoJsonZh from './_js/world-geo-json-zh.js'
+	<script type="text/javascript" src="./_js/echarts.min.js"></script>
+	<script type="module">
+		// load word geo json zh data
+		import worldGeoJsonZh from './_js/world-geo-json-zh.js'
 
-    var chartDom = document.getElementById("chart-container");
+		var chartDom = document.getElementById("chart-container");
 
-    // 使用Fetch API获取文件内容
-    fetch('./videolink.md')
-        .then(response => response.text())
-        .then(text => {
-            // 在这里处理从文件中获取的文本数据
-            // 可以根据文件内容的格式进行解析
-            // 假设文件内容是逗号分隔的国家名称和链接
-            // 例如：国家1,链接1\n国家2,链接2\n...
-            var lines = text.split('\n');
-            var data = lines.map(line => {
-                var parts = line.split(',');
-                return { name: parts[0], link: parts[1] };
-            });
+		// 使用Fetch API获取文件内容
+		fetch('./videolink.md')
+			.then(response => response.text())
+			.then(text => {
+				// 在这里处理从文件中获取的文本数据
+				// 可以根据文件内容的格式进行解析
+				// 假设文件内容是逗号分隔的国家名称和链接
+				// 例如：国家1,链接1\n国家2,链接2\n...
+				var lines = text.split('\n');
+				var data = lines.map(line => {
+					var parts = line.split(',');
+					return { name: parts[0], link: parts[1] };
+				});
 
-            // 调用创建地图的函数，确保数据已准备好
-            createMap(data);
-        })
-        .catch(error => {
-            console.error('无法获取文件内容:', error);
-        });
+				// 调用创建地图的函数，确保数据已准备好
+				createMap(data);
+			})
+			.catch(error => {
+				console.error('无法获取文件内容:', error);
+			});
 
-    function createMap(data) {
-        // 在这里创建地图，并将data分配给地图数据
-        var myChart = echarts.init(chartDom);
-        echarts.registerMap('WorldZh', worldGeoJsonZh);
+		function createMap(data) {
+			// 在这里创建地图，并将data分配给地图数据
+			var myChart = echarts.init(chartDom);
+			echarts.registerMap('WorldZh', worldGeoJsonZh);
 
-        var lightBlueItemStyle = {
-            normal: {
-                areaColor: 'lightblue',
-            },
-            emphasis: {
-                areaColor: '#f79e78'
-            }
-        };
+			var lightBlueItemStyle = {
+				normal: {
+					areaColor: 'lightblue',
+				},
+				emphasis: {
+					areaColor: '#f79e78'
+				}
+			};
 
-        var option = {
-            series: [
-                {
-                    name: 'Demo',
-                    type: 'map',
-                    roam: true,
-                    map: 'WorldZh',
-                    data: data.map(function (item) {
-                        return {
-                            name: item.name,
-                            value: 1,
-                            link: item.link,
-                            itemStyle: lightBlueItemStyle
-                        };
-                    }),
-                    itemStyle: {
-                        borderColor: 'white'
-                    },
-                    emphasis: {
-                        // 可以设置地图区域的高亮样式
-                    }
-                }
-            ]
-        };
+			var option = {
+				series: [
+					{
+						name: 'Demo',
+						type: 'map',
+						roam: true,
+						map: 'WorldZh',
+						data: data.map(function (item) {
+							return {
+								name: item.name,
+								value: 1,
+								link: item.link,
+								itemStyle: lightBlueItemStyle
+							};
+						}),
+						itemStyle: {
+							borderColor: 'white'
+						},
+						emphasis: {
+							// 可以设置地图区域的高亮样式
+						}
+					}
+				]
+			};
 
-        myChart.setOption(option);
+			myChart.setOption(option);
 
-        myChart.on('click', function (params) {
-            if (params.data && params.data.link) {
-                window.open(params.data.link, '_blank');
-            }
-        });
-    }
-</script>
+			myChart.on('click', function (params) {
+				if (params.data && params.data.link) {
+					window.open(params.data.link, '_blank');
+				}
+			});
+		}
+	</script>
 </body>
 </html>
