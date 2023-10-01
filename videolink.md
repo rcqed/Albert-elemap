@@ -55,3 +55,4 @@
 德国,https://player.bilibili.com/player.html?bvid=BV1z34y1o7d6
 巴勒斯坦,https://player.bilibili.com/player.html?bvid=BV1pV4y1o7Wm
 也门,https://player.bilibili.com/player.html?bvid=BV1pk4y1F74a
+约旦,https://player.bilibili.com/player.html?bvid=BV1PK4y1F7Rr
